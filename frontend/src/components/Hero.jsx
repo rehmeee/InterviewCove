@@ -20,7 +20,13 @@ const Hero = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 to-purple-900 relative overflow-hidden">
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
+      className="min-h-screen bg-gradient-to-br from-blue-900 to-purple-900 relative overflow-hidden"
+    >
       {/* Navigation Bar */}
       <nav className="flex justify-between items-center px-8 py-6 absolute w-full top-0">
         <motion.h1
@@ -222,7 +228,7 @@ const Hero = () => {
           />
         ))}
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 
