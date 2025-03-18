@@ -1,11 +1,24 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 
 const textVariants = {
   hidden: { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0, transition: { duration: 1, staggerChildren: 0.3 } },
 };
 
+const menuContainerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+};
+
+const menuItemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
 const Hero = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 to-purple-900 relative overflow-hidden">
       {/* Navigation Bar */}
@@ -19,7 +32,8 @@ const Hero = () => {
           interviewcove
         </motion.h1>
 
-        <div className="flex gap-8 text-white">
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex gap-8 text-white">
           {["Home", "Test Session", "Leaderboard"].map((item) => (
             <motion.button
               whileHover={{ scale: 1.05, color: "#7dd3fc" }}
@@ -36,7 +50,99 @@ const Hero = () => {
             Login/SignUp
           </motion.button>
         </div>
+
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden text-white"
+          onClick={() => setIsMenuOpen(true)}
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </button>
       </nav>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            key="mobile-menu"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                setIsMenuOpen(false);
+              }
+            }}
+          >
+            <motion.div
+              initial={{ y: -50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -50, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white p-8 rounded-lg w-full max-w-md relative"
+            >
+              <button
+                className="absolute top-4 right-4 text-black"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+              <motion.div
+                variants={menuContainerVariants}
+                initial="hidden"
+                animate="visible"
+                className="flex flex-col gap-4"
+              >
+                {["Home", "Test Session", "Leaderboard"].map((item) => (
+                  <motion.button
+                    variants={menuItemVariants}
+                    key={item}
+                    className="text-black text-lg font-medium"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item}
+                  </motion.button>
+                ))}
+                <motion.button
+                  variants={menuItemVariants}
+                  className="bg-cyan-400 text-black px-4 py-2 rounded-full text-lg font-bold"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Login/SignUp
+                </motion.button>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Hero Content */}
       <div className="flex flex-col items-center justify-center min-h-screen px-4 text-center">
@@ -57,10 +163,8 @@ const Hero = () => {
           {/* Animated Subtitle Text */}
           <motion.div variants={textVariants} className="space-y-4 mb-12">
             {[
-              "Challenge Your Limits,",
-              "Compete with Peers,",
-              "and Ace Your Interviews",
-              "- All in One Place!",
+              "The ultimate battleground for interview preparation",
+              "Are you ready to take the challenge?",
             ].map((line, index) => (
               <motion.p
                 key={index}
@@ -73,10 +177,7 @@ const Hero = () => {
           </motion.div>
 
           {/* Animated Buttons */}
-          <motion.div
-            variants={textVariants}
-            className="flex gap-6 justify-center"
-          >
+          <motion.div variants={textVariants} className="flex gap-6 justify-center">
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
