@@ -1,3 +1,4 @@
+import { Results } from "../models/result.model.js";
 import { User } from "../models/user.model.js";
 import { ApiErrors } from "../utils/apiErrors.js";
 import { ApiResponse } from "../utils/apiResponse.js";
@@ -68,6 +69,53 @@ const userLogin = asyncHandler(async (req, res) => {
 
 // user signUp starts here 
 const singUp = asyncHandler(async (req,res) => {
-    
+    const {name, email, password} = req.body;
+    if(!name || !email || !password) {
+        throw new ApiErrors(400, "please provide all the information")
+    }
+    const existedUser = await User.findOne({
+        email: email
+    })
+    if(existedUser){
+        throw new ApiErrors(300, "user is already existd please login")
+        
+    }
+    const user = await User.create({
+        name, 
+        email,
+        password
+    })
+    const createduser = await User.findById(user?._id).select("-password -refreshToken")
+    if(!createduser){
+        throw new ApiErrors(400, "error while genrating user")
+        
+    }
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, {
+            createduser
+        }, "user Created")
+    )
+});
+
+
+// get the information of test results
+
+const getResults = asyncHandler(async (req,res) => {
+    const user = await User.findById(req?.user._id);
+    const results = await Results.find({
+        user : user?._id
+    })
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200, 
+            results,
+            "success"
+        )
+    )
 })
-export { userLogin }
+export { userLogin , singUp, getResults}
