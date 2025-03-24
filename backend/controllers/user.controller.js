@@ -11,17 +11,19 @@ const genrateTokens = async (userid) => {
         const user = await User.findById(userid);
         const accessToken = user.genrateAccessTokens();
         const refreshToken = user.genrateRefreshTokens();
-        if(!accessToken || !refreshToken){
+        if (!accessToken || !refreshToken) {
             console.log("error while genrting tokens")
         }
         user.refreshToken = refreshToken;
-       await user.save({validateBeforeSave: false})
-        return {accessToken, refreshToken};
+        await user.save({ validateBeforeSave: false })
+        return { accessToken, refreshToken };
 
     } catch (error) {
         console.log("error while genrting tokens ", error)
     }
 }
+
+// user login starts here 
 const userLogin = asyncHandler(async (req, res) => {
     const { email, userName, password } = req.body;
     if (!email || !userName || !password) {
@@ -33,11 +35,11 @@ const userLogin = asyncHandler(async (req, res) => {
 
     }
     let pass = await user.ispasswordCorrect(password);
-    if(!pass){
+    if (!pass) {
         throw new ApiErrors(400, "access denied user not valid")
     }
-    const {accessToken , refreshToken} = await genrateTokens(user._id);
-    if(!accessToken || !refreshToken){
+    const { accessToken, refreshToken } = await genrateTokens(user._id);
+    if (!accessToken || !refreshToken) {
         throw new ApiErrors(400, "error while genrating tokens");
 
     }
@@ -47,27 +49,25 @@ const userLogin = asyncHandler(async (req, res) => {
         secrue: true
     }
     return res
-    .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
-    .json(
-        new ApiResponse(
-            200,
-            {
-                logindUser,
-                accessToken,
-                refreshToken
-            }, 
-            "user logind successfully"
-        )
-    );
-
-
-
-
-
-
-
-
+        .status(200)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json(
+            new ApiResponse(
+                200,
+                {
+                    logindUser,
+                    accessToken,
+                    refreshToken
+                },
+                "user logind successfully"
+            )
+        );
 });
+
+
+// user signUp starts here 
+const singUp = asyncHandler(async (req,res) => {
+    
+})
 export { userLogin }
