@@ -2,7 +2,7 @@ import { Results } from "../models/result.model.js";
 import { User } from "../models/user.model.js";
 import { ApiErrors } from "../utils/apiErrors.js";
 import { ApiResponse } from "../utils/apiResponse.js";
-import asyncHandler from "../utils/asyncHandler.js"
+import {asyncHandler} from "../utils/asyncHandler.js"
 
 
 // method to genrate the access tokens 
