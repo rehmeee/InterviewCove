@@ -16,12 +16,17 @@ const sessionSchema = new mongoose.Schema({
     participents:[
         participentSchema
     ],
+    createdBy: {
+        type : mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
     subject:{
         type: String,
         required: true
     }, 
     winner:{
-        participentSchema
+        participentSchema,
+        default: {}
     },
     totalMarks: {
         type: Number, 
