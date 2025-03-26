@@ -4,7 +4,11 @@ import { ApiErrors } from "../utils/apiErrors.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import {asyncHandler} from "../utils/asyncHandler.js"
 
-
+// cookies options
+const options = {
+    httponly: true,
+    secrue: true
+}
 // method to genrate the access tokens 
 
 const genrateTokens = async (userid) => {
@@ -26,11 +30,11 @@ const genrateTokens = async (userid) => {
 
 // user login starts here 
 const userLogin = asyncHandler(async (req, res) => {
-    const { email, userName, password } = req.body;
-    if (!email || !userName || !password) {
+    const { email, password } = req.body;
+    if (!email || !password) {
         throw new ApiErrors(400, "please enter all the Details");
     }
-    const user = await User.findOne({ $or: [{ userName }, { email }] });
+    const user = await User.findOne({ $or: [ { email }] });
     if (!user) {
         throw new ApiErrors(400, "user not found");
 
@@ -45,10 +49,7 @@ const userLogin = asyncHandler(async (req, res) => {
 
     }
     const logindUser = await User.findById(user._id).select("-refreshToken -password");
-    const options = {
-        httponly: true,
-        secrue: true
-    }
+    
     return res
         .status(200)
         .cookie("accessToken", accessToken, options)
@@ -100,6 +101,25 @@ const singUp = asyncHandler(async (req,res) => {
     )
 });
 
+// logout user
+
+const logout = asyncHandler(async (req,res) => {
+    await User.findOneAndUpdate(req.user._id,{
+        $set:{
+            refreshToken: undefined
+        }
+    }, {
+        new: true
+    })
+
+    return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(
+        new ApiResponse(200, {}, "user logout successfully")
+    )
+})
 
 // get the information of test results
 
@@ -118,4 +138,4 @@ const getResults = asyncHandler(async (req,res) => {
         )
     )
 })
-export { userLogin , singUp, getResults}
+export { userLogin , singUp, getResults, logout}

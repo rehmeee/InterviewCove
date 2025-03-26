@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getResults, singUp, userLogin } from "../controllers/user.controller.js";
+import { getResults, logout, singUp, userLogin } from "../controllers/user.controller.js";
 import { verifyUser } from "../middlewares/auth.middleware.js";
 const router = Router();
 
@@ -12,6 +12,9 @@ router.route("/signup").post(singUp);
 
 // to get the sessino results
 
-router.route("/performence").get( verifyUser,getResults)
+router.route("/performance").get( verifyUser,getResults);
+
+// to logout user
+router.route("/logout").get(verifyUser,logout)
 
 export default router;
