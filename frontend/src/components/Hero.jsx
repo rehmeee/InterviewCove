@@ -46,7 +46,7 @@ const Hero = () => {
               whileHover={{ scale: 1.05, color: "#7dd3fc" }}
               className="text-sm font-medium"
               key={item}
-              onClick={() => item === "Home" ? navigate("/") : item === "Start Session" ? navigate("/session:subject") : navigate("/Session:history")}
+              onClick={() => item === "Home" ? navigate("/") : item === "Start Session" ? navigate("/start-session") : navigate("/Session:history")}
             >
               {item}
             </motion.button>
@@ -193,13 +193,14 @@ const Hero = () => {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               className="bg-cyan-400 text-black px-8 py-4 rounded-full text-lg font-bold shadow-lg"
-              onClick={()=> navigate("/session:subject")}
+              onClick={()=> navigate("/start-session")}
             >
               Start Session!
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
+              onClick={()=> navigate("/join-session")}
               className="border-2 border-cyan-400 text-cyan-400 px-8 py-4 rounded-full text-lg font-bold shadow-lg"
             >
               Join Session

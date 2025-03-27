@@ -11,6 +11,7 @@ import SessionDashboard from './components/SessionDashboard.jsx'
 import TestHistoryDashboard from './components/TestHistoryDashboard.jsx'
 import Home from './components/Home.jsx'
 import StartSession  from './components/StartSession.jsx'
+import JoinSession from './components/JoinSession.jsx'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -24,7 +25,8 @@ function App() {
     <Route path='/signin' element={<SignIn/>}/>
     <Route path='/session:subject' element={<SessionDashboard/>}/>
     <Route path='/session:history' element={<TestHistoryDashboard/>}/>
-    <Route path='/Startsession' element={<StartSession/>}/>
+    <Route path='/start-session' element={<StartSession/>}/>
+    <Route path="/join-session" element={<JoinSession />} />
     </Routes>
    
     
