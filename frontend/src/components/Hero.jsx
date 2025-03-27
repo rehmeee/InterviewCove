@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-
+import { useNavigate } from "react-router";
 const textVariants = {
   hidden: { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0, transition: { duration: 1, staggerChildren: 0.3 } },
@@ -18,6 +18,7 @@ const menuItemVariants = {
 
 const Hero = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <motion.div
@@ -40,11 +41,12 @@ const Hero = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex gap-8 text-white">
-          {["Home", "Test Session", "Leaderboard"].map((item) => (
+          {["Home", "Start Session", "Leaderboard"].map((item) => (
             <motion.button
               whileHover={{ scale: 1.05, color: "#7dd3fc" }}
               className="text-sm font-medium"
               key={item}
+              onClick={() => item === "Home" ? navigate("/") : item === "Start Session" ? navigate("/session:subject") : navigate("/Session:history")}
             >
               {item}
             </motion.button>
@@ -52,6 +54,7 @@ const Hero = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             className="bg-cyan-400 text-black px-4 py-2 rounded-full text-sm font-bold"
+            onClick={()=> { navigate("/signup")}}
           >
             Login/SignUp
           </motion.button>
@@ -140,7 +143,9 @@ const Hero = () => {
                 <motion.button
                   variants={menuItemVariants}
                   className="bg-cyan-400 text-black px-4 py-2 rounded-full text-lg font-bold"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => {setIsMenuOpen(false);
+                    navigate("/signup")
+                  }}
                 >
                   Login/SignUp
                 </motion.button>
@@ -188,8 +193,9 @@ const Hero = () => {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               className="bg-cyan-400 text-black px-8 py-4 rounded-full text-lg font-bold shadow-lg"
+              onClick={()=> navigate("/session:subject")}
             >
-              Let's Start!
+              Start Session!
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.1 }}
