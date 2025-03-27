@@ -1,5 +1,5 @@
 import { useState } from 'react'
-
+import {Routes, Route} from "react-router-dom"
 import './App.css'
 import Navbar from './components/Navbar.jsx'
 import Hero from './components/Hero.jsx'
@@ -9,20 +9,27 @@ import SignIn from './components/SignIn.jsx'
 import SignUp from './components/SignUp.jsx'
 import SessionDashboard from './components/SessionDashboard.jsx'
 import TestHistoryDashboard from './components/TestHistoryDashboard.jsx'
+import Home from './components/Home.jsx'
+import StartSession  from './components/StartSession.jsx'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-    {/* <Navbar/> */}
-    {/* <Hero/>
-    <SubjectsGrid/>
-    <Footer/> */}
-    {/* <SignIn/> */}
-    {/* <SignUp/> */}
-    {/* <SessionDashboard/> */}
-    <TestHistoryDashboard/>
+    <Routes>
+    <Route path='/' element={<Home/>}/>
+    <Route path='/signup' element={<SignUp/>}/>
+    <Route path='/signin' element={<SignIn/>}/>
+    <Route path='/signin' element={<SignIn/>}/>
+    <Route path='/session:subject' element={<SessionDashboard/>}/>
+    <Route path='/session:history' element={<TestHistoryDashboard/>}/>
+    <Route path='/Startsession' element={<StartSession/>}/>
+    </Routes>
+   
+    
+    {/* <SessionDashboard/>
+    <TestHistoryDashboard/> */}
     </>
   )
 }
