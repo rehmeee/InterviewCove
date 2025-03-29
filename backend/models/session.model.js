@@ -13,6 +13,10 @@ const participentSchema = new mongoose.Schema({
 })
 
 const sessionSchema = new mongoose.Schema({
+    sessionId: {
+        type: String,
+        required : true
+    },
     participents:[
         participentSchema
     ],
