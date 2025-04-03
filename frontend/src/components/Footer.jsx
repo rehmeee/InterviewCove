@@ -1,8 +1,10 @@
 import React from "react";
 import { motion } from "framer-motion";
+import {useNavigate} from "react-router-dom"
 import { FaLinkedin, FaGithub, FaTwitter, FaEnvelope } from "react-icons/fa";
 
 const Footer = () => {
+  const navigate = useNavigate();
   return (
     <motion.footer
       initial={{ opacity: 0, y: 50 }}
@@ -28,23 +30,24 @@ const Footer = () => {
           <div className="space-y-4">
             <h4 className="text-xl font-semibold">Quick Links</h4>
             <ul className="space-y-2">
-              <li>
-                <a href="/" className="text-gray-300 hover:text-cyan-400 transition-colors">
+              
+              <li onClick={()=> navigate("/")} className="text-gray-300 hover:text-cyan-400 transition-colors cursor-pointer">
                   Home
-                </a>
+                
               </li>
-              <li>
-                <a href="/tests" className="text-gray-300 hover:text-cyan-400 transition-colors">
-                  Test Sessions
-                </a>
+              <li onClick={()=> navigate("/start-session")} className="text-gray-300 hover:text-cyan-400 transition-colors cursor-pointer">
+                  Start Session
+                
               </li>
-              <li>
-                <a href="/leaderboard" className="text-gray-300 hover:text-cyan-400 transition-colors">
+              
+              <li onClick={()=> navigate("/session:history")} className="text-gray-300 hover:text-cyan-400 transition-colors cursor-pointer">
                   Leaderboard
-                </a>
+                
               </li>
+             
+              
               <li>
-                <a href="/contact" className="text-gray-300 hover:text-cyan-400 transition-colors">
+                <a href="https://www.linkedin.com/in/rehman-ali-80497b204/" target="_blank" className="text-gray-300 hover:text-cyan-400 transition-colors">
                   Contact Us
                 </a>
               </li>
