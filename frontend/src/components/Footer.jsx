@@ -4,6 +4,10 @@ import {useNavigate} from "react-router-dom"
 import { FaLinkedin, FaGithub, FaTwitter, FaEnvelope } from "react-icons/fa";
 
 const Footer = () => {
+  function formHandling(e){
+e.preventDefault();
+
+  }
   const navigate = useNavigate();
   return (
     <motion.footer
@@ -60,7 +64,7 @@ const Footer = () => {
             <p className="text-gray-300">
               Subscribe to our newsletter for the latest updates and tips.
             </p>
-            <form className="flex space-x-2">
+            <form className="flex space-x-2" onSubmit={(e)=> forHandling(e)}>
               <input
                 type="email"
                 placeholder="Enter your email"
@@ -77,7 +81,7 @@ const Footer = () => {
             {/* Social Media Links */}
             <div className="flex space-x-4 mt-4">
               <a
-                href="https://linkedin.com"
+                href="linkedin.com/in/rehman-ali-80497b204/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-300 hover:text-cyan-400 transition-colors"
@@ -85,23 +89,16 @@ const Footer = () => {
                 <FaLinkedin className="w-6 h-6" />
               </a>
               <a
-                href="https://github.com"
+                href="https://github.com/rehmeee"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-300 hover:text-cyan-400 transition-colors"
               >
                 <FaGithub className="w-6 h-6" />
               </a>
+             
               <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-300 hover:text-cyan-400 transition-colors"
-              >
-                <FaTwitter className="w-6 h-6" />
-              </a>
-              <a
-                href="mailto:support@interviewcove.com"
+                href="mailto:chrehmanali5@gmail.com"
                 className="text-gray-300 hover:text-cyan-400 transition-colors"
               >
                 <FaEnvelope className="w-6 h-6" />
@@ -121,7 +118,7 @@ const Footer = () => {
           <p className="text-sm mt-2">
             Made with ❤️ by{" "}
             <a
-              href="https://yourportfolio.com"
+              href="https://github.com/rehmeee"
               target="_blank"
               rel="noopener noreferrer"
               className="text-cyan-400 hover:underline"
