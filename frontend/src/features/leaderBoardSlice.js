@@ -11,6 +11,8 @@ const leaderboardSlice = createSlice({
     name: leaderboard,
     initialState,
     reducers:{
-        
+        isLogedIn:  (state, action)=>{
+
+        }
     }
 })
