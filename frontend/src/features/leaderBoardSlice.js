@@ -1,11 +1,14 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios"
-let initialState ;
-  try {
-     initialState = await axios.get("https:localhost//5300/leaderboard").then(data=> console.log(data))
-} catch (error) {
-    
-}
+
+const initialState = createAsyncThunk('leaderboard/info', async(_, thunkAPI)  =>{
+    try {
+            const response = await axios.get("http://localhost:5000/session/leaderboard")
+            return response.data;
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error.response.data)        
+    }
+})
 
 const leaderboardSlice = createSlice({
     name: leaderboard,
