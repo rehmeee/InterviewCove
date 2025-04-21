@@ -6,7 +6,8 @@ const initialState = createAsyncThunk('leaderboard/info', async(_, thunkAPI)  =>
             const response = await axios.get("http://localhost:5000/session/leaderboard")
             return response.data;
     } catch (error) {
-        return thunkAPI.rejectWithValue(error.response.data)        
+        return thunkAPI.rejectWithValue(error.response.data)  
+
     }
 })
 
