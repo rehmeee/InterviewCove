@@ -15,8 +15,10 @@ const leaderboardSlice = createSlice({
     name: leaderboard,
     initialState,
     reducers:{
-        isLogedIn:  (state, action)=>{
+        addSessionInfo:  (state, action)=>{
 
         }
     }
 })
+export const {addSessionInfo} = leaderboardSlice.actions
+export default leaderboardSlice.reducer
