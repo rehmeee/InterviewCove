@@ -25,5 +25,8 @@ const sessionInfo = asyncHandler(async (req,res) => {
         new ApiResponse(200, questions, " quesions find")
     )
 })
+const leaderboardInfo = asyncHandler(async(req, res)=>{
+    
+})
 
 export {sessionInfo}
