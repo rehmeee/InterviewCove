@@ -1,6 +1,9 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { addSessionDetails } from "../features/sessionDetailsSlice";
+import { useDispatch} from 'react-redux'
+
 
 const generateRoomId = () => {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -20,11 +23,13 @@ const StartSession = () => {
   const navigate = useNavigate();
   const [roomId] = useState(generateRoomId());
   const [selectedSubject, setSelectedSubject] = useState("");
-  const [selectedQuestions, setSelectedQuestions] = useState("");
+  const [selectedQuestions, setSelectedQuestions] = useState(10);
   const [isCopied, setIsCopied] = useState(false);
 
-  const subjects = ['Tech', 'Business', 'Design', 'Engineering', 'Consulting'];
-  const questionNumbers = Array.from({ length: 10 }, (_, i) => i + 1);
+  const dispatch = useDispatch();
+
+  const subjects = ['Database', 'Web Development', 'OOP', 'OS', 'DSA'];
+  
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(roomId);
@@ -32,6 +37,21 @@ const StartSession = () => {
     if (navigator.vibrate) navigator.vibrate(50);
     setTimeout(() => setIsCopied(false), 2000);
   };
+  function handleOnClick(){
+    if(selectedSubject == ""){
+      alert("please Select subject")
+    }
+    else{
+      dispatch(addSessionDetails({
+        subject: selectedSubject,
+        questions: selectedQuestions,
+        roomID: roomId
+        
+      }));
+      navigate("/session:subject")
+    }
+    
+  }
 
   return (
     <motion.div
@@ -147,11 +167,14 @@ const StartSession = () => {
                   onChange={(e) => setSelectedQuestions(e.target.value)}
                 >
                   <option value="" className="bg-purple-900">Number of questions</option>
-                  {questionNumbers.map((num) => (
-                    <option key={num} value={num} className="bg-purple-900">
-                      {num}
+                  
+                    <option  onClick={()=> setSelectedQuestions(10)}  className="bg-purple-900">
+                      10
                     </option>
-                  ))}
+                    <option  onClick={()=> setSelectedQuestions(20)}  className="bg-purple-900">
+                      20
+                    </option>
+                 
                 </motion.select>
               </div>
             </motion.div>
@@ -162,7 +185,7 @@ const StartSession = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="bg-cyan-400 text-black px-8 py-4 rounded-full text-lg font-bold shadow-lg hover:shadow-cyan-400/30"
-                onClick={()=> navigate("/session:subject")}
+                onClick={()=> handleOnClick()}
               >
                 
                 Start Session Now

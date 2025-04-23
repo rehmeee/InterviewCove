@@ -12,7 +12,7 @@ const initialState = createAsyncThunk('leaderboard/info', async(_, thunkAPI)  =>
 })
 
 const leaderboardSlice = createSlice({
-    name: leaderboard,
+    name: "leaderboard",
     initialState,
     reducers:{
         addSessionInfo:  (state, action)=>{

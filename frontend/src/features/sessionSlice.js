@@ -8,7 +8,7 @@ const initialState ={
 
 }
 const sessionSlice = createSlice({
-    name: session,
+    name: "session",
     initialState,
     reducers:{
         addMessage: (state, action)=>{
