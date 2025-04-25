@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaVideo, FaVideoSlash, FaMicrophone, FaMicrophoneSlash, FaComment, FaRegPaperPlane } from 'react-icons/fa';
+import {useSelector, useDispatch} from "react-redux"
 
 const SessionDashboard = () => {
+  const{question} = useSelector(state=> state.question)
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [isMuted, setIsMuted] = useState(false);
