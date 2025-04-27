@@ -1,39 +1,46 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { FaVideo, FaVideoSlash, FaMicrophone, FaMicrophoneSlash, FaComment, FaRegPaperPlane } from 'react-icons/fa';
-import {useSelector, useDispatch} from "react-redux"
+import {useSelector, useDispatch} from "react-redux";
+import io from "socket.io-client"
 
 const SessionDashboard = () => {
-  const{question} = useSelector(state=> state.question)
+  const{ subject, question, roomID, users } = useSelector(state=> state.sessionInfo)
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
   const [timeLeft, setTimeLeft] = useState(30);
   const [currentQuestion, setCurrentQuestion] = useState(0);
-
+  const socket = useRef(null);
+  const accessToken = localStorage.getItem("accessToken");
+  const[questions, setQuestions] = useState({});
   // Sample questions
-  const questions = [
-    {
-      question: "What is the time complexity of binary search?",
-      choices: ["O(n)", "O(log n)", "O(n log n)", "O(1)"],
-      correct: 1
-    },
-    // Add more questions
-  ];
+  
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
-          handleNextQuestion();
-          return 30;
-        }
-        return prev - 1;
+
+     socket.current = io("http://localhost:5000", {
+      reconnection: true,
+      auth: {
+        token: `${accessToken}`,
+      },});
+      socket.current.on("connect_error", (error)=>{
+        console.log("error while connecting", error.messages);
+        socket.current.disconnect();
       });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [currentQuestion]);
+      
+      
+    }),[accessToken];
+    socket.current.emit("get_questions", {
+      subject, question, roomID
+    });
+    socket.current.on("recieve_details", (details)=>{
+      setQuestions(details.questions);
+      users = details.users;
+    })
+    
+
 
   const handleSendMessage = (e) => {
     e.preventDefault();

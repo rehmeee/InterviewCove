@@ -4,13 +4,13 @@ const sessionDetailsSlice = createSlice({
     name: "sessionInfo",
     initialState : {
         subject : null,
-        questions : null,
+        question : null,
         roomID: null,
         users:[]
     },
     reducers:{
         addSessionDetails: (state, action)=>{
-            state.questions = action.payload.questions,
+            state.question = action.payload.question,
             state.subject = action.payload.subject,
             state.roomID = action.payload.roomID
         }
