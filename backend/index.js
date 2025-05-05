@@ -48,6 +48,9 @@ dbConnect().then(()=>{
         
 
     })
+    io.on("joinSessionInfo", async ({})=>{
+        
+    })
     server.listen(5000, ()=>{
         console.log("app is listning on port 5000")
     })
