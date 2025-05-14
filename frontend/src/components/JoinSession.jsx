@@ -35,7 +35,7 @@ const JoinSession = () => {
       // Replace with actual API check
       const isValidSession = Math.random() > 0.2; // 80% success rate for demo
       if (isValidSession) {
-        navigate(`/session/${sessionId}`);
+        navigate(`/session-dashboard`);
       } else {
         setError("Session not found. Please check the ID and try again.");
       }
