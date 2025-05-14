@@ -44,7 +44,7 @@ const StartSession = () => {
     else{
       dispatch(addSessionDetails({
         subject: selectedSubject,
-        questions: selectedQuestions,
+        question: selectedQuestions,
         roomID: roomId
         
       }));

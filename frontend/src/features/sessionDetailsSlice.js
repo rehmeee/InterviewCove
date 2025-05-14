@@ -13,9 +13,12 @@ const sessionDetailsSlice = createSlice({
             state.question = action.payload.question,
             state.subject = action.payload.subject,
             state.roomID = action.payload.roomID
+        },
+        adduser: (state, action)=>{
+            state.users = state.users.push(action.payload)
         }
     }
 })
 
-export const {addSessionDetails} = sessionDetailsSlice.actions;
+export const {addSessionDetails, adduser} = sessionDetailsSlice.actions;
 export default sessionDetailsSlice.reducer
