@@ -11,6 +11,7 @@ const SessionDashboard = () => {
   const [newMessage, setNewMessage] = useState('');
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
+  const {isCreate} = useSelector(state => state.creatorSlice)
   const [timeLeft, setTimeLeft] = useState(30);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const socket = useRef(null);
@@ -57,11 +58,13 @@ const SessionDashboard = () => {
         token: `${accessToken}`,
       },
     });
-
-    socket.current.emit("get_questions", {
+    {isCreate? socket.current.emit("get_questions", {
       subject, question, roomID
-    });
-
+    }):socket.current.emit("get_questions", {
+      roomID
+    })
+}
+    
     socket.current.on("recieve_details", (details) => {
       console.log(details)
       dispatch(addUser(details.user));
@@ -76,13 +79,18 @@ const SessionDashboard = () => {
 
   }, [accessToken]);
 
-
-
+  // to recieve messages from backend 
+  socket.current.on("recieve-message", (data)=>{
+     setMessages([...messages, data]);
+  })
 
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (newMessage.trim()) {
-      setMessages([...messages, { text: newMessage, sender: 'You' }]);
+      socket.current.emit("send-message", {
+        user: isCreate? "A": "B",
+        message: newMessage
+      })
       setNewMessage('');
     }
   };
@@ -224,7 +232,7 @@ const SessionDashboard = () => {
             </motion.div>
           )}
 
-        
+
 
           {/* Progress */}
           <div className="bg-white/10 h-2 rounded-full mb-4">

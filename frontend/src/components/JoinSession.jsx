@@ -1,6 +1,10 @@
+import axios from "axios";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { changeCreator } from "../features/creatorSlice.js";
+import { useDispatch } from 'react-redux'
+import { addRoomID } from "../features/sessionDetailsSlice.js";
 
 const textVariants = {
   hidden: { opacity: 0, y: 40 },
@@ -13,33 +17,40 @@ const JoinSession = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isValid, setIsValid] = useState(false);
+  const dispatch = useDispatch();
 
-  const validateSessionId = (id) => {
-    const regex = /^[A-Z0-9]{6}$/;
-    return regex.test(id);
+  // to check either the room id is correct or not
+  const validateSessionId = async (id) => {
+    try {
+      const response = await axios.get("http://localhost:5000/check-room");
+      if (response.status == 200) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.log(error.message, "error while checking room id");
+    }
+
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     if (!validateSessionId(sessionId)) {
       setError("Invalid session ID format (must be 6 alphanumeric characters)");
       setIsLoading(false);
       return;
     }
+    else {
+      dispatch(changeCreator())
+      dispatch(addRoomID({
+        roomID:sessionId
+      }))
+      navigate("/session-dashboard");
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      // Replace with actual API check
-      const isValidSession = Math.random() > 0.2; // 80% success rate for demo
-      if (isValidSession) {
-        navigate(`/session-dashboard`);
-      } else {
-        setError("Session not found. Please check the ID and try again.");
-      }
-    }, 1500);
+    }
+
   };
 
   const handlePaste = async () => {
