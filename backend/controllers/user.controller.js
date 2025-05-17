@@ -1,4 +1,5 @@
 import { Results } from "../models/result.model.js";
+import { Session } from "../models/session.model.js";
 import { User } from "../models/user.model.js";
 import { ApiErrors } from "../utils/apiErrors.js";
 import { ApiResponse } from "../utils/apiResponse.js";
@@ -138,4 +139,24 @@ const getResults = asyncHandler(async (req,res) => {
         )
     )
 })
-export { userLogin , singUp, getResults, logout}
+
+// to check the Room is created or not
+
+const roomExists = asyncHandler(async (req, res) => {
+        const {roomId } = req?.query;
+        const createdRoom = await Session.findOne({
+            sessionId: roomId
+        })
+        if(!createdRoom){
+            return res.status(400).json(
+                new ApiResponse(400, null, "Invalid Room ID")
+            )
+        }
+        return res.status(200).json(
+                new ApiResponse(200, createdRoom, "Yes There is a Room With this Id")
+            )
+        
+
+
+})
+export { userLogin , singUp, getResults, logout , roomExists}
