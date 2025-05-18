@@ -7,6 +7,7 @@ import cors from "cors"
 import jwt from "jsonwebtoken"
 import { verifyUser } from "./middlewares/auth.middleware.js"
 import { User } from "./models/user.model.js"
+import { createSession } from "./utils/createSession.js"
 
 dotenv.config({
     path: "./.env"
@@ -37,8 +38,8 @@ dbConnect().then(()=>{
        }
     })
     io.on("connection", socket=>{
-        socket.on("createSession" , async({roomId, questions, subject})=>{
-            
+        socket.on("createSession" , async({roomId, noOfQuestions, subject})=>{
+            const{questions, createdSession } = await createSession(socket.user,roomId, subject, noOfQuestions );
             socket.emit("sessionCreated", {})
         });
 
