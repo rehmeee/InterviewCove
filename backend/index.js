@@ -1,62 +1,76 @@
-import {app} from "./app.js"
+import { app } from "./app.js"
 import dotenv from "dotenv"
 import dbConnect from "./db/dbConnection.js"
-import {Server} from "socket.io"
+import { Server } from "socket.io"
 import http from "http"
 import cors from "cors"
 import jwt from "jsonwebtoken"
 import { verifyUser } from "./middlewares/auth.middleware.js"
 import { User } from "./models/user.model.js"
 import { createSession } from "./utils/createSession.js"
+import { updateSession } from "./utils/updateSessionRecord.js"
+import { socketMiddleware } from "./middlewares/socket.middleware.js"
+import { collectInfo } from "./utils/collectSessionInfo.js"
 
 dotenv.config({
     path: "./.env"
 })
-dbConnect().then(()=>{
+dbConnect().then(() => {
     const server = http.createServer(app);
     const io = Server(server, {
-        cors:{
-            origin: process.env.CORS_ORIGIN, 
+        cors: {
+            origin: process.env.CORS_ORIGIN,
             Credential: true
         }
     })
-    io.use(async(socket, next)=>{
-       try {
-         const token = socket.handshake.auth.token;
-         if(!token) {
-             return next(new Error("no token found"))
-         }
-         const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET);
-         const user = await User.findById(decoded._id).select("-password")
-         if(!user){
-             return next(new Error("user is not found"))
-         }
-         socket.user = user;
-         next();
-       } catch (error) {
-        return next(new Error("user is Unathurized"))
-       }
-    })
-    io.on("connection", socket=>{
-        socket.on("createSession" , async({roomId, noOfQuestions, subject})=>{
-            const{questions, createdSession } = await createSession(socket.user,roomId, subject, noOfQuestions );
-            socket.emit("sessionCreated", {})
+
+    // middle ware to check either this socket is a valid or not 
+    io.use(socketMiddleware)
+
+
+
+    io.on("connection", socket => {
+        // to create a session 
+        socket.on("createSession", async ({ roomId, noOfQuestions, subject }) => {
+            const { questions, createdSession } = await createSession(socket.user, roomId, subject, noOfQuestions);
+
+            socket.emit("sessionCreated", { questions, createdSession })
         });
 
-        socket.on("joinSession", async({roomId})=>{
-            socket.emit("sessionJoined", {});
-        })
-        
+        // when the other user joins session
+        socket.on("joinSession", async ({ roomId }) => {
+            const user = socket.user;
 
-    })
-    io.on("joinSessionInfo", async ({})=>{
-        
-    })
-    server.listen(5000, ()=>{
+            // join room
+            socket.join(roomId);
+
+            // update the session
+            await updateSession(user, roomId);
+            socket.to(roomId).emit("user_joined", { user });
+
+            // to get the question and session details 
+            const session = await collectInfo(roomId);
+            
+            socket.emit("sessionJoined", {session});
+        })
+
+
+        // to send message to the other user 
+
+        socket.on("send_message", (message, roomId) => {
+            socket.to(roomId).emit("message", { message });
+        })
+
+
+
+
+    });
+
+    server.listen(5000, () => {
         console.log("app is listning on port 5000")
     })
-    
-}).catch((error)=>{
+
+}).catch((error) => {
     console.log("error while connecting database ", error)
 })
 

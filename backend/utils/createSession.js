@@ -9,6 +9,10 @@ export const createSession = async (user, roomId, subject, noOfQuestions) => {
         if(!questions){
             throw new ApiErrors(400, "error while fetching questions")
         }
+        let questionArray = [];
+        // create array for all the id of the questions so the other user will get all the same questions 
+        questions.map((question)=>questionArray.push(question._id))
+
 
         const createdSession =await Session.create({
             sessionId: roomId,
@@ -19,7 +23,8 @@ export const createSession = async (user, roomId, subject, noOfQuestions) => {
             ],
             createdAt: user?._id,
             subject,
-            totalMarks:noOfQuestions
+            totalMarks:noOfQuestions,
+            questionsList: questionArray
         })
 
         return {questions, createdSession};

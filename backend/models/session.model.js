@@ -35,7 +35,15 @@ const sessionSchema = new mongoose.Schema({
     totalMarks: {
         type: Number, 
         required : true
-    }
+    },
+    totalQuestion:{
+        type: Number,
+        default: 10
+    },
+    questionsList: [
+       { type: mongoose.Schema.Types.ObjectId,
+        ref: "Questions"}
+    ]
 
 
 },{timestamps:true});
